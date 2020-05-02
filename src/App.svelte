@@ -88,7 +88,10 @@
       class="enter {focused && 'enter-focused'}"
       on:mouseenter={() => (focused = true)}
       on:mouseleave={() => (focused = false)}>
-      <input bind:value={link} on:focus={() => (link = '')} />
+      <input
+        bind:value={link}
+        onfocus="this.select();"
+        onmouseup="return false;" />
       <button on:click={handleClick} disabled={fetching}>Enter</button>
     </div>
 
