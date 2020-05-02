@@ -1,0 +1,60 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.enter {
+  display: flex;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+}
+.enter input {
+  flex-grow: 1;
+  padding: 10px;
+  background-color: transparent;
+  border: 0;
+  border-left: 1px solid #0f0;
+  border-bottom: 1px solid #0f0;
+  color: #0f0;
+  height: 36px;
+  text-overflow: ellipsis;
+}
+
+.enter input:focus {
+  outline: none !important;
+  border-top: 1px solid #0f0;
+}
+
+.enter button {
+  background-color: transparent;
+  color: #0f0;
+  border: 0;
+  border-bottom: 1px solid #0f0;
+  border-right: 1px solid #0f0;
+  border-top: 1px solid #0f0;
+  height: 36px;
+  cursor: pointer;
+}
+
+.enter-focused {
+  box-shadow: 0 0 10px #e50914;
+}
+
+.enter-focused button {
+  color: #e50914 !important;
+}
+
+.enter-focused input {
+  border-left: 1px solid #0f0;
+  border-top: 1px solid #0f0;
+}
