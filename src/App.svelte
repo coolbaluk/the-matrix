@@ -4,7 +4,7 @@
 
   const defaultLink =
     "https://raw.githubusercontent.com/coolbaluk/the-matrix/master/src/App.svelte";
-  const defaultChars = "ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ".split("");
+  const defaultChars = "ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ";
 
   const fontSize = 16;
   const color = "#0f0";
@@ -18,6 +18,7 @@
 
   let focused = false;
   let visible = true;
+  let fetching = false;
 
   const getRandomInt = max => {
     return Math.floor(Math.random() * max);
@@ -30,6 +31,9 @@
   const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
   const handleClick = async () => {
+    if (link === "") return;
+
+    fetching = true;
     chars = defaultChars;
     drops = drops.map(() => 0);
 
@@ -39,6 +43,10 @@
 
     await sleep((windowHeight / 2 / fontSize + 10) * interval);
     const response = await fetch(link);
+    if (!response.ok) {
+      chars = "Mr. Anderson ";
+      return;
+    }
     chars = await response.text();
   };
 
@@ -81,11 +89,11 @@
     on:mouseleave={() => (focused = false)}
     transition:fade>
     <input bind:value={link} on:focus={() => (link = '')} />
-    <button on:click={handleClick}>Enter</button>
+    <button on:click={handleClick} disabled={fetching}>Enter</button>
   </div>
   <div class="text" transition:fade>
-    Paste a raw github link or use the default (code of this website) to see it
-    matrixified
+    Paste a (raw github) link or use the default (code of this website) to see
+    it matrixified
   </div>
 {/if}
 

@@ -47,6 +47,10 @@ body {
   cursor: pointer;
 }
 
+.enter button:active {
+  outline: none;
+}
+
 .enter-focused {
   box-shadow: 0 0 10px #e50914;
 }
