@@ -31,7 +31,7 @@
   const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
   const handleClick = async () => {
-    if (link === "") return;
+    if (link.trim() === "") return;
 
     fetching = true;
     chars = defaultChars;
@@ -83,17 +83,20 @@
 <svelte:window bind:innerWidth={windowWidth} bind:innerHeight={windowHeight} />
 
 {#if visible}
-  <div
-    class="enter {focused && 'enter-focused'}"
-    on:mouseenter={() => (focused = true)}
-    on:mouseleave={() => (focused = false)}
-    transition:fade>
-    <input bind:value={link} on:focus={() => (link = '')} />
-    <button on:click={handleClick} disabled={fetching}>Enter</button>
-  </div>
-  <div class="text" transition:fade>
-    Paste a (raw github) link or use the default (code of this website) to see
-    it matrixified
+  <div class="wrapper" transition:fade>
+    <div
+      class="enter {focused && 'enter-focused'}"
+      on:mouseenter={() => (focused = true)}
+      on:mouseleave={() => (focused = false)}>
+      <input bind:value={link} on:focus={() => (link = '')} />
+      <button on:click={handleClick} disabled={fetching}>Enter</button>
+    </div>
+
+    <div class="text" transition:fade>
+      Paste a (raw github) link or use the default
+      <span on:click={() => (link = defaultLink)}>(this website)</span>
+      to see it matrixified
+    </div>
   </div>
 {/if}
 

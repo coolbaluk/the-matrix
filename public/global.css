@@ -10,13 +10,22 @@ body {
   box-sizing: border-box;
 }
 
-.enter {
+.wrapper {
   display: flex;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 500px;
+  max-width: 80vw;
+  flex-wrap: wrap;
+}
+
+.enter {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-basis: 100%;
+  margin: 0 30px;
 }
 
 .enter input {
@@ -65,9 +74,12 @@ body {
 }
 
 .text {
-  position: absolute;
-  top: calc(50% + 40px);
-  left: 50%;
-  transform: translate(-50%, -50%);
+  flex-basis: 100%;
   color: #0f0;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.text span {
+  cursor: pointer;
 }
