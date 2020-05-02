@@ -1,26 +1,45 @@
 <script>
   import { onMount } from "svelte";
+  import { fade } from "svelte/transition";
 
-  let chars = "ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ".split("");
-  const noInitialDrop = true;
+  const defaultLink =
+    "https://raw.githubusercontent.com/coolbaluk/autohotkey-scripts/master/volume-control-scroll.ahk";
+  const defaultChars = "ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ".split("");
+
   const fontSize = 16;
   const color = "#0f0";
-  const interval = 1000;
+  const interval = 33;
 
   let canvas;
   let windowWidth = 300;
   let windowHeight = 150;
-  let focused = false;
-  let defaultLink =
-    "https://raw.githubusercontent.com/coolbaluk/autohotkey-scripts/master/volume-control-scroll.ahk";
   let link = defaultLink;
+  let chars = defaultChars;
+
+  let focused = false;
+  let visible = true;
+
+  const getRandomInt = max => {
+    return Math.floor(Math.random() * max);
+  };
 
   $: columns = Math.round(windowWidth / fontSize);
-  $: drops = Array(columns).fill(noInitialDrop ? windowHeight : 0);
+  $: drops = Array(columns).fill(windowHeight);
+  $: startingCharacterIndices = Array(columns)
+    .fill(0)
+    .map(() => getRandomInt(columns));
 
   const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
   const handleClick = async () => {
+    chars = defaultChars;
+    drops = drops.map(() => 0);
+
+    await sleep((windowHeight / 2 / fontSize - 2) * interval);
+
+    visible = false;
+
+    await sleep((windowHeight / 2 / fontSize + 10) * interval);
     const response = await fetch(link);
     chars = await response.text();
   };
@@ -38,9 +57,7 @@
   };
 
   onMount(async () => {
-    console.log(drops);
     [windowWidth, windowHeight] = await [window.innerWidth, window.innerHeight];
-    console.log(windowHeight);
     const ctx = canvas.getContext("2d");
     ctx.canvas.width = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
@@ -51,17 +68,14 @@
       ctx.fillStyle = color;
       ctx.font = `${fontSize}px arial`;
       for (let i = 0; i < columns; i++) {
-        // Displays a random character from chars
-        // const randomChar = Math.floor(Math.random() * chars.length);
-        const randomChar = drops[i];
-        console.log(randomChar, drops.length, columns);
-        const text = chars[randomChar];
+        const charIndex =
+          (startingCharacterIndices[i] + drops[i]) % chars.length;
+        const text = chars[charIndex];
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
         const reachedEndOfScreen =
           drops[i] * fontSize > canvas.height && Math.random() > 0.975;
-        // console.log(drops[i] * fontSize > canvas.height);
-        // if (reachedEndOfScreen) drops[i] = 0
-        if (reachedEndOfScreen) drops[i] = Math.floor(Math.random() * columns);
+        if (reachedEndOfScreen) drops[i] = getRandomInt(columns);
         drops[i]++;
       }
       await sleep(interval);
@@ -71,11 +85,19 @@
 
 <svelte:window bind:innerWidth={windowWidth} bind:innerHeight={windowHeight} />
 
-<div
-  class="enter {focused && 'enter-focused'}"
-  on:mouseenter={handleEnter}
-  on:mouseleave={handleLeave}>
-  <input bind:value={link} on:focus={handleFocus} />
-  <button on:click={handleClick}>Enter</button>
-</div>
+{#if visible}
+  <div
+    class="enter {focused && 'enter-focused'}"
+    on:mouseenter={handleEnter}
+    on:mouseleave={handleLeave}
+    transition:fade>
+    <input bind:value={link} on:focus={handleFocus} />
+    <button on:click={handleClick}>Enter</button>
+  </div>
+  <div class="text" transition:fade>
+    Paste a raw github link or use the default (code of this website) to see it
+    matrixified
+  </div>
+{/if}
+
 <canvas bind:this={canvas} width={windowWidth} height={windowHeight} />

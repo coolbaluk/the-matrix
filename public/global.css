@@ -18,6 +18,7 @@ body {
   transform: translate(-50%, -50%);
   width: 500px;
 }
+
 .enter input {
   flex-grow: 1;
   padding: 10px;
@@ -57,4 +58,12 @@ body {
 .enter-focused input {
   border-left: 1px solid #0f0;
   border-top: 1px solid #0f0;
+}
+
+.text {
+  position: absolute;
+  top: calc(50% + 40px);
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #0f0;
 }
