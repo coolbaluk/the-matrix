@@ -44,18 +44,6 @@
     chars = await response.text();
   };
 
-  const handleFocus = () => {
-    link = "";
-  };
-
-  const handleEnter = () => {
-    focused = true;
-  };
-
-  const handleLeave = () => {
-    focused = false;
-  };
-
   onMount(async () => {
     [windowWidth, windowHeight] = await [window.innerWidth, window.innerHeight];
     const ctx = canvas.getContext("2d");
@@ -88,10 +76,10 @@
 {#if visible}
   <div
     class="enter {focused && 'enter-focused'}"
-    on:mouseenter={handleEnter}
-    on:mouseleave={handleLeave}
+    on:mouseenter={() => (focused = true)}
+    on:mouseleave={() => (focused = false)}
     transition:fade>
-    <input bind:value={link} on:focus={handleFocus} />
+    <input bind:value={link} on:focus={() => (link = '')} />
     <button on:click={handleClick}>Enter</button>
   </div>
   <div class="text" transition:fade>
