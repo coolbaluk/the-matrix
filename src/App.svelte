@@ -3,7 +3,7 @@
   import { fade } from "svelte/transition";
 
   const defaultLink =
-    "https://raw.githubusercontent.com/coolbaluk/autohotkey-scripts/master/volume-control-scroll.ahk";
+    "https://raw.githubusercontent.com/coolbaluk/the-matrix/master/src/App.svelte";
   const defaultChars = "ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ".split("");
 
   const fontSize = 16;
@@ -25,9 +25,7 @@
 
   $: columns = Math.round(windowWidth / fontSize);
   $: drops = Array(columns).fill(windowHeight);
-  $: startingCharacterIndices = Array(columns)
-    .fill(0)
-    .map(() => getRandomInt(columns));
+  $: startingCharacterIndices = Array(columns).fill(0);
 
   const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -63,7 +61,10 @@
 
         const reachedEndOfScreen =
           drops[i] * fontSize > canvas.height && Math.random() > 0.975;
-        if (reachedEndOfScreen) drops[i] = getRandomInt(columns);
+        if (reachedEndOfScreen) {
+          drops[i] = getRandomInt(columns);
+          startingCharacterIndices[i] = getRandomInt(chars.length);
+        }
         drops[i]++;
       }
       await sleep(interval);
